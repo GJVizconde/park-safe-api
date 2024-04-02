@@ -2,12 +2,11 @@
   "name": "park-safe-api",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/app.js",
+  "main": "dist/app.js",
   "scripts": {
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/app.js",
-    "start:prod": "node dist/app.js"
+    "start": "npm run build && node dist/app.js"
   },
   "keywords": [],
   "author": "",
