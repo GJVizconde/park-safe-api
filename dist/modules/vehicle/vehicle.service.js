@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerNewVehicle = exports.getAllVehicles = void 0;
+exports.getVehicle = exports.registerNewVehicle = exports.getAllVehicles = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
 const getAllVehicles = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,3 +53,24 @@ const registerNewVehicle = (body) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.registerNewVehicle = registerNewVehicle;
+const getVehicle = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const vehicle = yield prisma_1.prisma.vehicle.findMany({
+            where: {
+                users: {
+                    every: {
+                        id
+                    }
+                }
+            },
+            include: {
+                Ticket: {}
+            }
+        });
+        return vehicle;
+    }
+    catch (error) {
+        (0, errorResponse_1.handleError)(error, 'ERROR_GET_VEHICLE_BY_USER_ID');
+    }
+});
+exports.getVehicle = getVehicle;

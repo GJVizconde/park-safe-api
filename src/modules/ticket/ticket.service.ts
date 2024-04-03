@@ -60,7 +60,8 @@ const getTicket = async (id: number) => {
       },
       include: {
         user: {},
-        vehicle: {}
+        vehicle: {},
+        collaborators: {}
       }
     })
     return ticket

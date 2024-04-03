@@ -43,4 +43,24 @@ const registerNewVehicle = async (body: Vehicle) => {
   }
 }
 
-export { getAllVehicles, registerNewVehicle }
+const getVehicle = async (id: number) => {
+  try {
+    const vehicle = await prisma.vehicle.findMany({
+      where: {
+        users: {
+          every: {
+            id
+          }
+        }
+      },
+      include: {
+        Ticket: {}
+      }
+    })
+    return vehicle
+  } catch (error) {
+    handleError(error, 'ERROR_GET_VEHICLE_BY_USER_ID')
+  }
+}
+
+export { getAllVehicles, registerNewVehicle, getVehicle }

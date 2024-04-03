@@ -23,11 +23,10 @@ const register = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function*
     }
 });
 exports.register = register;
-const login = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body, query }, res) {
+const login = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body }, res) {
     try {
-        const { role } = query;
-        console.log('Body en controller', body, role);
-        const user = yield (0, auth_service_1.loginUser)(body, role);
+        console.log('Body en controller', body);
+        const user = yield (0, auth_service_1.loginUser)(body);
         res.status(200).send(user);
     }
     catch (error) {

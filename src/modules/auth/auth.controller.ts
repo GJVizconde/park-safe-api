@@ -12,11 +12,10 @@ const register = async ({ body }: Request, res: Response) => {
   }
 }
 
-const login = async ({ body, query }: Request, res: Response) => {
+const login = async ({ body }: Request, res: Response) => {
   try {
-    const { role } = query
-    console.log('Body en controller', body, role)
-    const user = await loginUser(body, role)
+    console.log('Body en controller', body)
+    const user = await loginUser(body)
     res.status(200).send(user)
   } catch (error) {
     handleErrorResponse(res, error)

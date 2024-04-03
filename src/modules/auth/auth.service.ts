@@ -6,6 +6,8 @@ import { Auth } from './auth.interface'
 
 const newUser = async (body: User) => {
   try {
+    console.log('BODY QUE LLEGA', body)
+    console.log(body.id)
     const user = await prisma.user.findFirst({
       where: {
         id: Number(body.id)
@@ -24,7 +26,10 @@ const newUser = async (body: User) => {
 
     const newUser = await prisma.user.create({
       data: {
-        ...body,
+        name: body.name,
+        email: body.email,
+        password: body.password,
+        role: body.role,
         id: Number(body.id)
       }
     })
@@ -37,14 +42,21 @@ const newUser = async (body: User) => {
   }
 }
 
-const loginUser = async ({ email, password }: Auth, role: any) => {
-  if (role === 'USER') {
-    const checkIs = await prisma.user.findUnique({
-      where: {
-        email
-      }
-    })
-    if (!checkIs) throw new Error('NOT_FOUND_USER')
+const loginUser = async ({ id, password }: Auth) => {
+  const checkIs = await prisma.user.findUnique({
+    where: {
+      id: Number(id)
+    }
+  })
+
+  const checkIsCollaborator = await prisma.collaborator.findUnique({
+    where: {
+      id: Number(id)
+    }
+  })
+  if (!checkIs && !checkIsCollaborator) throw new Error('NOT_FOUND_USER')
+
+  if (checkIs) {
     const passwordHash = checkIs.password
 
     if (password !== passwordHash) throw new Error('Credentials are invalid')
@@ -56,13 +68,7 @@ const loginUser = async ({ email, password }: Auth, role: any) => {
     }
 
     return data
-  } else {
-    const checkIsCollaborator = await prisma.collaborator.findUnique({
-      where: {
-        email
-      }
-    })
-    if (!checkIsCollaborator) throw new Error('NOT_FOUND_USER')
+  } else if (checkIsCollaborator) {
     const passwordHash = checkIsCollaborator.password
 
     if (password !== passwordHash) throw new Error('Credentials are invalid')

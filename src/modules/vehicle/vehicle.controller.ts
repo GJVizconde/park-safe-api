@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { handleErrorResponse } from '../../utils/errorResponse'
-import { getAllVehicles, registerNewVehicle } from './vehicle.service'
+import { getAllVehicles, getVehicle, registerNewVehicle } from './vehicle.service'
 
 const getVechicles = async (_req: Request, res: Response) => {
   try {
@@ -22,4 +22,15 @@ const registerVehicle = async ({ body }: Request, res: Response) => {
   }
 }
 
-export { getVechicles, registerVehicle }
+const getVehicleByUserId = async ({ params }: Request, res: Response) => {
+  try {
+    const { id } = params
+    console.log('Estoy en getVehicleByUserId')
+    const vehicle = await getVehicle(Number(id))
+    res.status(200).send(vehicle)
+  } catch (error) {
+    handleErrorResponse(res, error)
+  }
+}
+
+export { getVechicles, registerVehicle, getVehicleByUserId }

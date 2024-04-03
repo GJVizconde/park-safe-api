@@ -70,7 +70,8 @@ const getTicket = (id) => __awaiter(void 0, void 0, void 0, function* () {
             },
             include: {
                 user: {},
-                vehicle: {}
+                vehicle: {},
+                collaborators: {}
             }
         });
         return ticket;

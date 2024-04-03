@@ -15,6 +15,8 @@ const jwt_handle_1 = require("../../utils/jwt.handle");
 const prisma_1 = require("../prisma");
 const newUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log('BODY QUE LLEGA', body);
+        console.log(body.id);
         const user = yield prisma_1.prisma.user.findFirst({
             where: {
                 id: Number(body.id)
@@ -30,7 +32,13 @@ const newUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
         if (isEmailExist)
             throw new Error('Email already registered');
         const newUser = yield prisma_1.prisma.user.create({
-            data: Object.assign(Object.assign({}, body), { id: Number(body.id) })
+            data: {
+                name: body.name,
+                email: body.email,
+                password: body.password,
+                role: body.role,
+                id: Number(body.id)
+            }
         });
         console.log(newUser);
         return newUser;
@@ -40,15 +48,20 @@ const newUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.newUser = newUser;
-const loginUser = (_a, role_1) => __awaiter(void 0, [_a, role_1], void 0, function* ({ email, password }, role) {
-    if (role === 'USER') {
-        const checkIs = yield prisma_1.prisma.user.findUnique({
-            where: {
-                email
-            }
-        });
-        if (!checkIs)
-            throw new Error('NOT_FOUND_USER');
+const loginUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id, password }) {
+    const checkIs = yield prisma_1.prisma.user.findUnique({
+        where: {
+            id: Number(id)
+        }
+    });
+    const checkIsCollaborator = yield prisma_1.prisma.collaborator.findUnique({
+        where: {
+            id: Number(id)
+        }
+    });
+    if (!checkIs && !checkIsCollaborator)
+        throw new Error('NOT_FOUND_USER');
+    if (checkIs) {
         const passwordHash = checkIs.password;
         if (password !== passwordHash)
             throw new Error('Credentials are invalid');
@@ -59,14 +72,7 @@ const loginUser = (_a, role_1) => __awaiter(void 0, [_a, role_1], void 0, functi
         };
         return data;
     }
-    else {
-        const checkIsCollaborator = yield prisma_1.prisma.collaborator.findUnique({
-            where: {
-                email
-            }
-        });
-        if (!checkIsCollaborator)
-            throw new Error('NOT_FOUND_USER');
+    else if (checkIsCollaborator) {
         const passwordHash = checkIsCollaborator.password;
         if (password !== passwordHash)
             throw new Error('Credentials are invalid');

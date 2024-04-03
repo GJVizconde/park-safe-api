@@ -1,8 +1,9 @@
 import { Router } from 'express'
-import { getVechicles, registerVehicle } from './vehicle.controller'
+import { getVechicles, getVehicleByUserId, registerVehicle } from './vehicle.controller'
 
 const vehicleRouter = Router()
 
+vehicleRouter.get('/:id', getVehicleByUserId)
 vehicleRouter.get('/', getVechicles)
 vehicleRouter.post('/', registerVehicle)
 
