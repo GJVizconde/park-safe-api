@@ -43,13 +43,13 @@ const registerNewVehicle = async (body: Vehicle) => {
   }
 }
 
-const getVehicle = async (id: number) => {
+const getVehicle = async (userId: number) => {
   try {
     const vehicle = await prisma.vehicle.findMany({
       where: {
         users: {
           every: {
-            id
+            id: Number(userId)
           }
         }
       },
@@ -57,10 +57,23 @@ const getVehicle = async (id: number) => {
         Ticket: {}
       }
     })
-    return vehicle
+    return vehicle[0]
   } catch (error) {
     handleError(error, 'ERROR_GET_VEHICLE_BY_USER_ID')
   }
 }
 
-export { getAllVehicles, registerNewVehicle, getVehicle }
+const getVehicleByLicense = async (licenseId: string) => {
+  try {
+    const vehicle = await prisma.vehicle.findMany({
+      where: {
+        licensePlate: licenseId
+      }
+    })
+    return vehicle[0]
+  } catch (error) {
+    handleError(error, 'ERROR_GET_VEHICLE_BY_USER_ID')
+  }
+}
+
+export { getAllVehicles, registerNewVehicle, getVehicle, getVehicleByLicense }

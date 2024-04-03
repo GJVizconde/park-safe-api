@@ -1,10 +1,15 @@
 import { Request, Response } from 'express'
 import { handleErrorResponse } from '../../utils/errorResponse'
-import { getAllVehicles, getVehicle, registerNewVehicle } from './vehicle.service'
+import {
+  getAllVehicles,
+  getVehicle,
+  getVehicleByLicense,
+  registerNewVehicle
+} from './vehicle.service'
 
-const getVechicles = async (_req: Request, res: Response) => {
+const getVehicles = async (_req: Request, res: Response) => {
   try {
-    console.log('Estoy en getVechiclesController')
+    console.log('Estoy en getVehiclesController')
     const vehicles = await getAllVehicles()
     res.status(200).send(vehicles)
   } catch (error) {
@@ -24,13 +29,25 @@ const registerVehicle = async ({ body }: Request, res: Response) => {
 
 const getVehicleByUserId = async ({ params }: Request, res: Response) => {
   try {
-    const { id } = params
-    console.log('Estoy en getVehicleByUserId')
-    const vehicle = await getVehicle(Number(id))
+    const { userId } = params
+    console.log('Estoy en getVehicleByUserId 2432423')
+    const vehicle = await getVehicle(Number(userId))
     res.status(200).send(vehicle)
   } catch (error) {
     handleErrorResponse(res, error)
   }
 }
 
-export { getVechicles, registerVehicle, getVehicleByUserId }
+const getVehicleByLicensePlate = async ({ params }: Request, res: Response) => {
+  try {
+    console.log('Estoy en servicio000000000000000')
+    const { licenseId } = params
+    console.log('Estoy en getVehicleByLicensePlate')
+    const vehicle = await getVehicleByLicense(licenseId)
+    res.status(200).send(vehicle)
+  } catch (error) {
+    handleErrorResponse(res, error)
+  }
+}
+
+export { getVehicles, registerVehicle, getVehicleByUserId, getVehicleByLicensePlate }
