@@ -1,5 +1,5 @@
 import { prisma } from '../prisma'
-import { handleError, handleErrorResponse } from '../../utils/errorResponse'
+import { handleError } from '../../utils/errorResponse'
 import { Vehicle } from './vehicle.interface'
 
 const getAllVehicles = async () => {
@@ -23,6 +23,12 @@ const registerNewVehicle = async (body: Vehicle) => {
 
     if (!user) throw new Error('USER NOT FOUND, REGISTER NEW USER')
 
+    console.log('Nuevo Registro')
+
+    console.log('licensePlate => ', body.licensePlate)
+
+    if (await getVehicleByLicense(body?.licensePlate)) throw new Error('CAR_ALREADY_REGISTER')
+
     const newVehicle = await prisma.vehicle.create({
       data: {
         licensePlate: body.licensePlate, // Asegúrate de que este sea un ID único
@@ -43,7 +49,7 @@ const registerNewVehicle = async (body: Vehicle) => {
   }
 }
 
-const getVehicle = async (userId: number) => {
+const getVehicleByUser = async (userId: number) => {
   try {
     const vehicle = await prisma.vehicle.findMany({
       where: {
@@ -76,4 +82,4 @@ const getVehicleByLicense = async (licenseId: string) => {
   }
 }
 
-export { getAllVehicles, registerNewVehicle, getVehicle, getVehicleByLicense }
+export { getAllVehicles, registerNewVehicle, getVehicleByUser, getVehicleByLicense }

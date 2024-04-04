@@ -2,8 +2,8 @@ import { Request, Response } from 'express'
 import { handleErrorResponse } from '../../utils/errorResponse'
 import {
   getAllVehicles,
-  getVehicle,
   getVehicleByLicense,
+  getVehicleByUser,
   registerNewVehicle
 } from './vehicle.service'
 
@@ -31,7 +31,7 @@ const getVehicleByUserId = async ({ params }: Request, res: Response) => {
   try {
     const { userId } = params
     console.log('Estoy en getVehicleByUserId 2432423')
-    const vehicle = await getVehicle(Number(userId))
+    const vehicle = await getVehicleByUser(Number(userId))
     res.status(200).send(vehicle)
   } catch (error) {
     handleErrorResponse(res, error)
