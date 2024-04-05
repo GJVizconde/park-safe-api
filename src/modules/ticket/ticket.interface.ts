@@ -5,4 +5,5 @@ export interface Ticket {
   userId: number
   collaboratorId: number
   vehicleId: string
+  isDelete: boolean
 }

@@ -38,8 +38,8 @@ model Vehicle {
   description  String
 
   // Relations
-  users  User[]
-  Ticket Ticket?
+  users   User[]
+  tickets Ticket[]
 }
 
 model Collaborator {
@@ -57,12 +57,13 @@ model Ticket {
   checkIn      DateTime  @default(now())
   checkOut     DateTime?
   parkingPlace String
+  isDelete     Boolean   @default(false)
 
-  userId Int  @unique
+  userId Int
   user   User @relation(fields: [userId], references: [id])
 
   collaborators Collaborator[]
 
-  vehicleId String  @unique
+  vehicleId String
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
 }

@@ -2,9 +2,15 @@ import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 import { Ticket } from './ticket.interface'
 
-const getAllTickets = async () => {
+const getAllTickets = async (active: boolean | undefined) => {
   try {
+    console.log('ACTIVE => ', active)
     const tickets = await prisma.ticket.findMany({
+      where: {
+        ...(active === true && {
+          isDelete: false
+        })
+      },
       include: {
         user: {
           select: {
@@ -28,21 +34,25 @@ const getAllTickets = async () => {
 
 const generateNewTicket = async (body: Ticket) => {
   try {
-    const user = await prisma.ticket.findUnique({
+    const user = await prisma.ticket.findFirst({
       where: {
-        userId: body.userId
+        userId: body.userId,
+        isDelete: false
       }
     })
 
     if (user) throw new Error('User already registered a vehicle')
 
-    const vehicle = await prisma.ticket.findUnique({
+    const vehicle = await prisma.ticket.findFirst({
       where: {
-        vehicleId: body.vehicleId
+        vehicleId: body.vehicleId,
+        isDelete: false
       }
     })
 
-    if (vehicle) throw new Error('Vehicle is already registered')
+    console.log('vehicle', vehicle)
+
+    // if (vehicle) throw new Error('Vehicle is already registered')
 
     //TODO: Check user already has a ticket
     const newTicket = await prisma.ticket.create({
@@ -65,7 +75,7 @@ const generateNewTicket = async (body: Ticket) => {
 
 const getTicket = async (id: number) => {
   try {
-    const ticket = await prisma.ticket.findUnique({
+    const ticket = await prisma.ticket.findFirst({
       where: {
         userId: id
       },
@@ -78,6 +88,23 @@ const getTicket = async (id: number) => {
     return ticket
   } catch (error) {
     handleError(error, 'ERROR_GET_TICKET_ID')
+  }
+}
+
+const softDeleteTicketStatus = async (id: string) => {
+  try {
+    const ticket = await prisma.ticket.update({
+      where: {
+        id: id
+      },
+      data: {
+        isDelete: true
+      }
+    })
+
+    return ticket
+  } catch (error) {
+    handleError(error, 'ERROR_LOGIC_DELETE_TICKET')
   }
 }
 
@@ -95,4 +122,4 @@ const deleteTicketById = async (id: string) => {
   }
 }
 
-export { getAllTickets, generateNewTicket, getTicket, deleteTicketById }
+export { getAllTickets, generateNewTicket, getTicket, softDeleteTicketStatus, deleteTicketById }

@@ -36,10 +36,10 @@ CREATE TABLE "Collaborator" (
 CREATE TABLE "Ticket" (
     "id" TEXT NOT NULL,
     "checkIn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "checkOut" TIMESTAMP(3) NOT NULL,
+    "checkOut" TIMESTAMP(3),
     "parkingPlace" TEXT NOT NULL,
+    "isDelete" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,
-    "collaboratorId" INTEGER NOT NULL,
     "vehicleId" TEXT NOT NULL,
 
     CONSTRAINT "Ticket_pkey" PRIMARY KEY ("id")
@@ -47,6 +47,12 @@ CREATE TABLE "Ticket" (
 
 -- CreateTable
 CREATE TABLE "_UserToVehicle" (
+    "A" INTEGER NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_CollaboratorToTicket" (
     "A" INTEGER NOT NULL,
     "B" TEXT NOT NULL
 );
@@ -70,25 +76,19 @@ CREATE UNIQUE INDEX "Collaborator_email_key" ON "Collaborator"("email");
 CREATE UNIQUE INDEX "Ticket_id_key" ON "Ticket"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Ticket_userId_key" ON "Ticket"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Ticket_collaboratorId_key" ON "Ticket"("collaboratorId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Ticket_vehicleId_key" ON "Ticket"("vehicleId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_UserToVehicle_AB_unique" ON "_UserToVehicle"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_UserToVehicle_B_index" ON "_UserToVehicle"("B");
 
--- AddForeignKey
-ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "_CollaboratorToTicket_AB_unique" ON "_CollaboratorToTicket"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_CollaboratorToTicket_B_index" ON "_CollaboratorToTicket"("B");
 
 -- AddForeignKey
-ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_collaboratorId_fkey" FOREIGN KEY ("collaboratorId") REFERENCES "Collaborator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "Vehicle"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -98,3 +98,9 @@ ALTER TABLE "_UserToVehicle" ADD CONSTRAINT "_UserToVehicle_A_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "_UserToVehicle" ADD CONSTRAINT "_UserToVehicle_B_fkey" FOREIGN KEY ("B") REFERENCES "Vehicle"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CollaboratorToTicket" ADD CONSTRAINT "_CollaboratorToTicket_A_fkey" FOREIGN KEY ("A") REFERENCES "Collaborator"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CollaboratorToTicket" ADD CONSTRAINT "_CollaboratorToTicket_B_fkey" FOREIGN KEY ("B") REFERENCES "Ticket"("id") ON DELETE CASCADE ON UPDATE CASCADE;

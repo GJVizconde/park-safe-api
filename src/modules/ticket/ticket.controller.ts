@@ -1,10 +1,17 @@
 import { Request, Response } from 'express'
 import { handleErrorResponse } from '../../utils/errorResponse'
-import { deleteTicketById, generateNewTicket, getAllTickets, getTicket } from './ticket.service'
+import {
+  deleteTicketById,
+  generateNewTicket,
+  getAllTickets,
+  getTicket,
+  softDeleteTicketStatus
+} from './ticket.service'
 
-const getTickets = async (_req: Request, res: Response) => {
+const getTickets = async ({ query: { active } }: Request, res: Response) => {
   try {
-    const tickets = await getAllTickets()
+    console.log('active controller', active)
+    const tickets = await getAllTickets(Boolean(active))
     res.status(200).send(tickets)
   } catch (error) {
     handleErrorResponse(res, error)
@@ -13,6 +20,7 @@ const getTickets = async (_req: Request, res: Response) => {
 
 const generateTicket = async ({ body }: Request, res: Response) => {
   try {
+    console.log(body)
     const ticket = await generateNewTicket(body)
 
     res.status(200).send(ticket)
@@ -33,9 +41,16 @@ const getTicketByUserId = async (req: Request, res: Response) => {
   }
 }
 
-const deleteTicket = async ({ params }: Request, res: Response) => {
-  const { id } = params
+const softDeleteTicket = async ({ params: { id } }: Request, res: Response) => {
+  try {
+    const ticketStatus = await softDeleteTicketStatus(id)
+    res.status(200).send(ticketStatus)
+  } catch (error) {
+    handleErrorResponse(res, error)
+  }
+}
 
+const deleteTicket = async ({ params: { id } }: Request, res: Response) => {
   try {
     const ticket = await deleteTicketById(id)
     res.status(200).json({
@@ -47,4 +62,4 @@ const deleteTicket = async ({ params }: Request, res: Response) => {
   }
 }
 
-export { getTickets, generateTicket, getTicketByUserId, deleteTicket }
+export { getTickets, generateTicket, getTicketByUserId, softDeleteTicket, deleteTicket }
