@@ -12,12 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllUsers = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
-const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUsers = (userId, ticket) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield prisma_1.prisma.user.findMany({
-            include: {
+            where: Object.assign({ id: userId ? userId : undefined }, (ticket === true && {
+                tickets: { some: {} }
+            })),
+            include: Object.assign(Object.assign({}, (ticket !== true && {
+                // No incluir vehicles si ticket es verdadero
                 vehicles: {}
-            }
+            })), { tickets: {
+                    include: {
+                        collaborators: {}
+                    }
+                } })
         });
         return users;
     }

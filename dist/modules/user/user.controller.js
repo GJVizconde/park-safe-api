@@ -12,10 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUsers = void 0;
 const errorResponse_1 = require("../../utils/errorResponse");
 const user_service_1 = require("./user.service");
-const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getUsers = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query }, res) {
+    const { userId, ticket } = query;
     try {
         console.log('Estoy en getUsersController');
-        const users = yield (0, user_service_1.getAllUsers)();
+        const users = yield (0, user_service_1.getAllUsers)(Number(userId), Boolean(ticket));
         res.status(200).send(users);
     }
     catch (error) {

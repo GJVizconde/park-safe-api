@@ -16,7 +16,17 @@ const getAllTickets = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tickets = yield prisma_1.prisma.ticket.findMany({
             include: {
-                user: {},
+                user: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
+                collaborators: {
+                    select: {
+                        name: true
+                    }
+                },
                 vehicle: {}
             }
         });
@@ -43,6 +53,7 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
         });
         if (vehicle)
             throw new Error('Vehicle is already registered');
+        //TODO: Check user already has a ticket
         const newTicket = yield prisma_1.prisma.ticket.create({
             data: {
                 userId: body.userId,
@@ -83,6 +94,7 @@ const getTicket = (id) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getTicket = getTicket;
 const deleteTicketById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        //TODO:Verificar si existe el ticket, manejar ese error
         const ticket = yield prisma_1.prisma.ticket.delete({
             where: {
                 id

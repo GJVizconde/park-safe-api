@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVehicle = exports.registerNewVehicle = exports.getAllVehicles = void 0;
+exports.getVehicleByLicense = exports.getVehicleByUser = exports.registerNewVehicle = exports.getAllVehicles = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
 const getAllVehicles = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,6 +32,10 @@ const registerNewVehicle = (body) => __awaiter(void 0, void 0, void 0, function*
         console.log('USER => ', user);
         if (!user)
             throw new Error('USER NOT FOUND, REGISTER NEW USER');
+        console.log('Nuevo Registro');
+        console.log('licensePlate => ', body.licensePlate);
+        if (yield getVehicleByLicense(body === null || body === void 0 ? void 0 : body.licensePlate))
+            throw new Error('CAR_ALREADY_REGISTER');
         const newVehicle = yield prisma_1.prisma.vehicle.create({
             data: {
                 licensePlate: body.licensePlate, // Asegúrate de que este sea un ID único
@@ -43,7 +47,12 @@ const registerNewVehicle = (body) => __awaiter(void 0, void 0, void 0, function*
                 }
             },
             include: {
-                users: {}
+                users: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
             }
         });
         return newVehicle;
@@ -53,13 +62,13 @@ const registerNewVehicle = (body) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.registerNewVehicle = registerNewVehicle;
-const getVehicle = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getVehicleByUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const vehicle = yield prisma_1.prisma.vehicle.findMany({
             where: {
                 users: {
                     every: {
-                        id
+                        id: Number(userId)
                     }
                 }
             },
@@ -67,10 +76,24 @@ const getVehicle = (id) => __awaiter(void 0, void 0, void 0, function* () {
                 Ticket: {}
             }
         });
-        return vehicle;
+        return vehicle[0];
     }
     catch (error) {
         (0, errorResponse_1.handleError)(error, 'ERROR_GET_VEHICLE_BY_USER_ID');
     }
 });
-exports.getVehicle = getVehicle;
+exports.getVehicleByUser = getVehicleByUser;
+const getVehicleByLicense = (licenseId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const vehicle = yield prisma_1.prisma.vehicle.findMany({
+            where: {
+                licensePlate: licenseId
+            }
+        });
+        return vehicle[0];
+    }
+    catch (error) {
+        (0, errorResponse_1.handleError)(error, 'ERROR_GET_VEHICLE_BY_license');
+    }
+});
+exports.getVehicleByLicense = getVehicleByLicense;

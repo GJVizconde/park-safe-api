@@ -15,4 +15,5 @@ router.use('/user', user_router_1.default);
 router.use('/collaborator', collaborator_router_1.default);
 router.use('/vehicle', vechicle_router_1.default);
 router.use('/ticket', ticket_router_1.default);
+//TODO: create route, controller and service of parkingPlace
 exports.default = router;
