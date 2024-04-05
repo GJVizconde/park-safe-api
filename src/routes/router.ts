@@ -13,4 +13,6 @@ router.use('/collaborator', collaboratorRouter)
 router.use('/vehicle', vehicleRouter)
 router.use('/ticket', ticketRouter)
 
+//TODO: create route, controller and service of parkingPlace
+
 export default router

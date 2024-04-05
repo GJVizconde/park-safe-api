@@ -1,11 +1,25 @@
 import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 
-const getAllUsers = async () => {
+const getAllUsers = async (userId: number | null, ticket: boolean | undefined) => {
   try {
     const users = await prisma.user.findMany({
+      where: {
+        id: userId ? userId : undefined,
+        ...(ticket === true && {
+          tickets: { some: {} }
+        })
+      },
       include: {
-        vehicles: {}
+        ...(ticket !== true && {
+          // No incluir vehicles si ticket es verdadero
+          vehicles: {}
+        }),
+        tickets: {
+          include: {
+            collaborators: {}
+          }
+        }
       }
     })
     return users

@@ -6,7 +6,17 @@ const getAllTickets = async () => {
   try {
     const tickets = await prisma.ticket.findMany({
       include: {
-        user: {},
+        user: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        collaborators: {
+          select: {
+            name: true
+          }
+        },
         vehicle: {}
       }
     })
@@ -34,6 +44,7 @@ const generateNewTicket = async (body: Ticket) => {
 
     if (vehicle) throw new Error('Vehicle is already registered')
 
+    //TODO: Check user already has a ticket
     const newTicket = await prisma.ticket.create({
       data: {
         userId: body.userId,
@@ -72,6 +83,7 @@ const getTicket = async (id: number) => {
 
 const deleteTicketById = async (id: string) => {
   try {
+    //TODO:Verificar si existe el ticket, manejar ese error
     const ticket = await prisma.ticket.delete({
       where: {
         id

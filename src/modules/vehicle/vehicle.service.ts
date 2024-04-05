@@ -40,7 +40,12 @@ const registerNewVehicle = async (body: Vehicle) => {
         }
       },
       include: {
-        users: {}
+        users: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
       }
     })
     return newVehicle
@@ -78,7 +83,7 @@ const getVehicleByLicense = async (licenseId: string) => {
     })
     return vehicle[0]
   } catch (error) {
-    handleError(error, 'ERROR_GET_VEHICLE_BY_USER_ID')
+    handleError(error, 'ERROR_GET_VEHICLE_BY_license')
   }
 }
 
