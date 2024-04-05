@@ -73,7 +73,7 @@ model Ticket {
 
 model Parking {
   id        String  @id @unique
-  available Boolean
+  available Boolean @default(true)
 
   ticket Ticket?
 }
