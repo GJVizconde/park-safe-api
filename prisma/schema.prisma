@@ -66,4 +66,14 @@ model Ticket {
 
   vehicleId String
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+
+  parkingId String  @unique
+  parking   Parking @relation(fields: [parkingId], references: [id])
+}
+
+model Parking {
+  id        String  @id @unique
+  available Boolean
+
+  ticket Ticket?
 }
