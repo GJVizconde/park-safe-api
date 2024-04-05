@@ -63,9 +63,6 @@ const getVehicleByUser = async (userId: number) => {
             id: Number(userId)
           }
         }
-      },
-      include: {
-        Ticket: {}
       }
     })
     return vehicle[0]

@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTicket = exports.getTicketByUserId = exports.generateTicket = exports.getTickets = void 0;
+exports.deleteTicket = exports.softDeleteTicket = exports.getTicketByUserId = exports.generateTicket = exports.getTickets = void 0;
 const errorResponse_1 = require("../../utils/errorResponse");
 const ticket_service_1 = require("./ticket.service");
-const getTickets = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getTickets = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query: { active } }, res) {
     try {
-        const tickets = yield (0, ticket_service_1.getAllTickets)();
+        console.log('active controller', active);
+        const tickets = yield (0, ticket_service_1.getAllTickets)(Boolean(active));
         res.status(200).send(tickets);
     }
     catch (error) {
@@ -22,8 +23,9 @@ const getTickets = (_req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getTickets = getTickets;
-const generateTicket = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ body }, res) {
+const generateTicket = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body }, res) {
     try {
+        console.log(body);
         const ticket = yield (0, ticket_service_1.generateNewTicket)(body);
         res.status(200).send(ticket);
     }
@@ -44,8 +46,17 @@ const getTicketByUserId = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getTicketByUserId = getTicketByUserId;
-const deleteTicket = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ params }, res) {
-    const { id } = params;
+const softDeleteTicket = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0, function* ({ params: { id } }, res) {
+    try {
+        const ticketStatus = yield (0, ticket_service_1.softDeleteTicketStatus)(id);
+        res.status(200).send(ticketStatus);
+    }
+    catch (error) {
+        (0, errorResponse_1.handleErrorResponse)(res, error);
+    }
+});
+exports.softDeleteTicket = softDeleteTicket;
+const deleteTicket = (_d, res_4) => __awaiter(void 0, [_d, res_4], void 0, function* ({ params: { id } }, res) {
     try {
         const ticket = yield (0, ticket_service_1.deleteTicketById)(id);
         res.status(200).json({

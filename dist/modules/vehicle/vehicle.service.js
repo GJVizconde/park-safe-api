@@ -71,9 +71,6 @@ const getVehicleByUser = (userId) => __awaiter(void 0, void 0, void 0, function*
                         id: Number(userId)
                     }
                 }
-            },
-            include: {
-                Ticket: {}
             }
         });
         return vehicle[0];

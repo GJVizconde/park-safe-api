@@ -9,12 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTicketById = exports.getTicket = exports.generateNewTicket = exports.getAllTickets = void 0;
+exports.deleteTicketById = exports.softDeleteTicketStatus = exports.getTicket = exports.generateNewTicket = exports.getAllTickets = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
-const getAllTickets = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllTickets = (active) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log('ACTIVE => ', active);
         const tickets = yield prisma_1.prisma.ticket.findMany({
+            where: Object.assign({}, (active === true && {
+                isDelete: false
+            })),
             include: {
                 user: {
                     select: {
@@ -39,20 +43,22 @@ const getAllTickets = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.getAllTickets = getAllTickets;
 const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield prisma_1.prisma.ticket.findUnique({
+        const user = yield prisma_1.prisma.ticket.findFirst({
             where: {
-                userId: body.userId
+                userId: body.userId,
+                isDelete: false
             }
         });
         if (user)
             throw new Error('User already registered a vehicle');
-        const vehicle = yield prisma_1.prisma.ticket.findUnique({
+        const vehicle = yield prisma_1.prisma.ticket.findFirst({
             where: {
-                vehicleId: body.vehicleId
+                vehicleId: body.vehicleId,
+                isDelete: false
             }
         });
-        if (vehicle)
-            throw new Error('Vehicle is already registered');
+        console.log('vehicle', vehicle);
+        // if (vehicle) throw new Error('Vehicle is already registered')
         //TODO: Check user already has a ticket
         const newTicket = yield prisma_1.prisma.ticket.create({
             data: {
@@ -75,7 +81,7 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
 exports.generateNewTicket = generateNewTicket;
 const getTicket = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ticket = yield prisma_1.prisma.ticket.findUnique({
+        const ticket = yield prisma_1.prisma.ticket.findFirst({
             where: {
                 userId: id
             },
@@ -92,6 +98,23 @@ const getTicket = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getTicket = getTicket;
+const softDeleteTicketStatus = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const ticket = yield prisma_1.prisma.ticket.update({
+            where: {
+                id: id
+            },
+            data: {
+                isDelete: true
+            }
+        });
+        return ticket;
+    }
+    catch (error) {
+        (0, errorResponse_1.handleError)(error, 'ERROR_LOGIC_DELETE_TICKET');
+    }
+});
+exports.softDeleteTicketStatus = softDeleteTicketStatus;
 const deleteTicketById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //TODO:Verificar si existe el ticket, manejar ese error
