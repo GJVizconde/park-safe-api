@@ -41,8 +41,17 @@ CREATE TABLE "Ticket" (
     "isDelete" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,
     "vehicleId" TEXT NOT NULL,
+    "parkingId" TEXT NOT NULL,
 
     CONSTRAINT "Ticket_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Parking" (
+    "id" TEXT NOT NULL,
+    "available" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "Parking_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -76,6 +85,12 @@ CREATE UNIQUE INDEX "Collaborator_email_key" ON "Collaborator"("email");
 CREATE UNIQUE INDEX "Ticket_id_key" ON "Ticket"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Ticket_parkingId_key" ON "Ticket"("parkingId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Parking_id_key" ON "Parking"("id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_UserToVehicle_AB_unique" ON "_UserToVehicle"("A", "B");
 
 -- CreateIndex
@@ -92,6 +107,9 @@ ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_userId_fkey" FOREIGN KEY ("userId") 
 
 -- AddForeignKey
 ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "Vehicle"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_parkingId_fkey" FOREIGN KEY ("parkingId") REFERENCES "Parking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_UserToVehicle" ADD CONSTRAINT "_UserToVehicle_A_fkey" FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
