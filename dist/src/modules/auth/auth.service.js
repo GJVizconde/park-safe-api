@@ -49,9 +49,18 @@ const newUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.newUser = newUser;
 const loginUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id, password }) {
-    const checkIs = yield prisma_1.prisma.user.findUnique({
+    var _b;
+    const checkIs = yield prisma_1.prisma.user.findFirst({
         where: {
             id: Number(id)
+        },
+        include: {
+            tickets: {
+                where: {
+                    isDelete: false
+                },
+                select: { id: true }
+            }
         }
     });
     const checkIsCollaborator = yield prisma_1.prisma.collaborator.findUnique({
@@ -65,10 +74,17 @@ const loginUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id, passw
         const passwordHash = checkIs.password;
         if (password !== passwordHash)
             throw new Error('Credentials are invalid');
+        console.log('USUARIO  =>', checkIs);
         const token = (0, jwt_handle_1.generateToken)(checkIs.email, checkIs.role, checkIs.id);
         const data = {
             token,
-            user: checkIs
+            user: {
+                id: checkIs.id,
+                name: checkIs.name,
+                email: checkIs.email,
+                role: checkIs.role,
+                hasTicket: ((_b = checkIs === null || checkIs === void 0 ? void 0 : checkIs.tickets[0]) === null || _b === void 0 ? void 0 : _b.id) ? true : false
+            }
         };
         return data;
     }

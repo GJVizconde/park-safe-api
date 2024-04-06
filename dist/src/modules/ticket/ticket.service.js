@@ -64,7 +64,7 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
             data: {
                 userId: body.userId,
                 vehicleId: body.vehicleId,
-                parkingPlace: body.parkingPlace,
+                parkingId: body.parkingId,
                 collaborators: {
                     connect: {
                         id: Number(body.collaboratorId) // ID del usuario que deseas conectar al vehículo
