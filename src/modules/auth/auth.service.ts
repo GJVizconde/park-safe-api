@@ -43,9 +43,17 @@ const newUser = async (body: User) => {
 }
 
 const loginUser = async ({ id, password }: Auth) => {
-  const checkIs = await prisma.user.findUnique({
+  const checkIs = await prisma.user.findFirst({
     where: {
       id: Number(id)
+    },
+    include: {
+      tickets: {
+        where: {
+          isDelete: false
+        },
+        select: { id: true }
+      }
     }
   })
 
@@ -61,10 +69,18 @@ const loginUser = async ({ id, password }: Auth) => {
 
     if (password !== passwordHash) throw new Error('Credentials are invalid')
 
+    console.log('USUARIO  =>', checkIs)
+
     const token = generateToken(checkIs.email, checkIs.role, checkIs.id)
     const data = {
       token,
-      user: checkIs
+      user: {
+        id: checkIs.id,
+        name: checkIs.name,
+        email: checkIs.email,
+        role: checkIs.role,
+        hasTicket: checkIs?.tickets[0]?.id ? true : false
+      }
     }
 
     return data

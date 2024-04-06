@@ -1,7 +1,7 @@
 export interface Ticket {
   checkIn?: Date
   checkOut?: Date
-  parkingPlace: string
+  parkingId: string
   userId: number
   collaboratorId: number
   vehicleId: string

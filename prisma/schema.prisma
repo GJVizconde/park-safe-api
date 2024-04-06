@@ -53,11 +53,10 @@ model Collaborator {
 }
 
 model Ticket {
-  id           String    @id @unique @default(uuid())
-  checkIn      DateTime  @default(now())
-  checkOut     DateTime?
-  parkingPlace String
-  isDelete     Boolean   @default(false)
+  id       String    @id @unique @default(uuid())
+  checkIn  DateTime  @default(now())
+  checkOut DateTime?
+  isDelete Boolean   @default(false)
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
