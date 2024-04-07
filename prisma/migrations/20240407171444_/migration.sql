@@ -84,9 +84,6 @@ CREATE UNIQUE INDEX "Collaborator_email_key" ON "Collaborator"("email");
 CREATE UNIQUE INDEX "Ticket_id_key" ON "Ticket"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Ticket_parkingId_key" ON "Ticket"("parkingId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Parking_id_key" ON "Parking"("id");
 
 -- CreateIndex

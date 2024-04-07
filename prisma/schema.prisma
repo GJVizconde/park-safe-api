@@ -66,7 +66,7 @@ model Ticket {
   vehicleId String
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
 
-  parkingId String  @unique
+  parkingId String
   parking   Parking @relation(fields: [parkingId], references: [id])
 }
 
@@ -74,5 +74,5 @@ model Parking {
   id        String  @id @unique
   available Boolean @default(true)
 
-  ticket Ticket?
+  tickets Ticket[]
 }
