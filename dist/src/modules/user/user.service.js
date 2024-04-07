@@ -15,9 +15,9 @@ const errorResponse_1 = require("../../utils/errorResponse");
 const getAllUsers = (userId, ticket) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield prisma_1.prisma.user.findMany({
-            where: Object.assign({ id: userId ? userId : undefined }, (ticket === true && {
+            where: Object.assign(Object.assign({ id: userId ? userId : undefined }, (ticket === true && {
                 tickets: { some: {} }
-            })),
+            })), { role: 'USER' }),
             include: Object.assign(Object.assign({}, (ticket !== true && {
                 // No incluir vehicles si ticket es verdadero
                 vehicles: {}
