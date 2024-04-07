@@ -72,10 +72,18 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
                 }
             }
         });
-        return newTicket;
+        const statusParking = yield prisma_1.prisma.parking.update({
+            where: {
+                id: body.parkingId
+            },
+            data: {
+                available: false
+            }
+        });
+        return { newTicket, statusParking };
     }
     catch (error) {
-        (0, errorResponse_1.handleError)(error, 'ERROR_REGISTER_VEHICLE');
+        (0, errorResponse_1.handleError)(error, 'ERROR_REGISTER_TICKET');
     }
 });
 exports.generateNewTicket = generateNewTicket;
@@ -105,7 +113,12 @@ const softDeleteTicketStatus = (id) => __awaiter(void 0, void 0, void 0, functio
                 id: id
             },
             data: {
-                isDelete: true
+                isDelete: true,
+                parking: {
+                    update: {
+                        available: true
+                    }
+                }
             }
         });
         return ticket;
