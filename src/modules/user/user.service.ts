@@ -1,5 +1,6 @@
 import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
+import { Role } from '@prisma/client'
 
 const getAllUsers = async (userId: number | null, ticket: boolean | undefined) => {
   try {
@@ -8,7 +9,8 @@ const getAllUsers = async (userId: number | null, ticket: boolean | undefined) =
         id: userId ? userId : undefined,
         ...(ticket === true && {
           tickets: { some: {} }
-        })
+        }),
+        role: 'USER'
       },
       include: {
         ...(ticket !== true && {
