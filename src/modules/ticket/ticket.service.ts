@@ -67,9 +67,19 @@ const generateNewTicket = async (body: Ticket) => {
         }
       }
     })
-    return newTicket
+
+    const statusParking = await prisma.parking.update({
+      where: {
+        id: body.parkingId
+      },
+      data: {
+        available: false
+      }
+    })
+
+    return { newTicket, statusParking }
   } catch (error) {
-    handleError(error, 'ERROR_REGISTER_VEHICLE')
+    handleError(error, 'ERROR_REGISTER_TICKET')
   }
 }
 
@@ -98,7 +108,12 @@ const softDeleteTicketStatus = async (id: string) => {
         id: id
       },
       data: {
-        isDelete: true
+        isDelete: true,
+        parking: {
+          update: {
+            available: true
+          }
+        }
       }
     })
 
