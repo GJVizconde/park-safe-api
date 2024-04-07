@@ -1,14 +1,18 @@
 import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
-import { Role } from '@prisma/client'
 
 const getAllUsers = async (userId: number | null, ticket: boolean | undefined) => {
   try {
     const users = await prisma.user.findMany({
       where: {
         id: userId ? userId : undefined,
+
         ...(ticket === true && {
-          tickets: { some: {} }
+          tickets: {
+            some: {
+              isDelete: false
+            }
+          }
         }),
         role: 'USER'
       },
@@ -18,6 +22,9 @@ const getAllUsers = async (userId: number | null, ticket: boolean | undefined) =
           vehicles: {}
         }),
         tickets: {
+          where: {
+            isDelete: false
+          },
           include: {
             collaborators: {}
           }
