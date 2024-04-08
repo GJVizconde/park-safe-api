@@ -2,9 +2,15 @@ import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 import { Vehicle } from './vehicle.interface'
 
-const getAllVehicles = async () => {
+const getAllVehicles = async (id?: string) => {
   try {
-    const vehicles = await prisma.vehicle.findMany({})
+    const vehicles = await prisma.vehicle.findMany({
+      where: {
+        ...(id && {
+          id
+        })
+      }
+    })
     return vehicles
   } catch (error) {
     handleError(error, 'ERROR_GET_VEHICLES')

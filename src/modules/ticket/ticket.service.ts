@@ -1,6 +1,8 @@
 import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 import { Ticket } from './ticket.interface'
+import { getAllVehicles } from '../vehicle/vehicle.service'
+import { Vehicle } from '../vehicle/vehicle.interface'
 
 const getAllTickets = async (active: boolean | undefined) => {
   try {
@@ -41,20 +43,25 @@ const generateNewTicket = async (body: Ticket) => {
       }
     })
 
-    if (user) throw new Error('User already registered a vehicle')
+    if (user) throw new Error('User already has a ticket')
 
-    const vehicle = await prisma.ticket.findFirst({
+    const vehicle = await getAllVehicles(body.vehicleId)
+
+    console.log(vehicle)
+
+    const isExistVehicle = await prisma.ticket.findFirst({
       where: {
-        vehicleId: body.vehicleId,
+        vehicle: {
+          licensePlate: vehicle ? vehicle[0]?.licensePlate : ''
+        },
         isDelete: false
       }
     })
 
-    console.log('vehicle', vehicle)
+    console.log('isExistVehicle', isExistVehicle)
 
-    if (vehicle) throw new Error('Vehicle is already assign to a ticket')
+    if (isExistVehicle) throw new Error('Vehicle is already assign to a ticket')
 
-    //TODO: Check user already has a ticket
     const newTicket = await prisma.ticket.create({
       data: {
         userId: body.userId,

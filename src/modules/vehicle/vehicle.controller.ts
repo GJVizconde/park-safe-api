@@ -7,10 +7,11 @@ import {
   registerNewVehicle
 } from './vehicle.service'
 
-const getVehicles = async (_req: Request, res: Response) => {
+const getVehicles = async ({ query: { id } }: Request, res: Response) => {
   try {
+    console.log(id)
     console.log('Estoy en getVehiclesController')
-    const vehicles = await getAllVehicles()
+    const vehicles = await getAllVehicles(String(id))
     res.status(200).send(vehicles)
   } catch (error) {
     handleErrorResponse(res, error)
