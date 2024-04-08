@@ -87,7 +87,8 @@ const getTicket = async (id: number) => {
   try {
     const ticket = await prisma.ticket.findFirst({
       where: {
-        userId: id
+        userId: id,
+        isDelete: false
       },
       include: {
         user: {},
