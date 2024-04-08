@@ -58,7 +58,8 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
             }
         });
         console.log('vehicle', vehicle);
-        // if (vehicle) throw new Error('Vehicle is already registered')
+        if (vehicle)
+            throw new Error('Vehicle is already assign to a ticket');
         //TODO: Check user already has a ticket
         const newTicket = yield prisma_1.prisma.ticket.create({
             data: {
