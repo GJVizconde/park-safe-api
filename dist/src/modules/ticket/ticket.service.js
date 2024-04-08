@@ -91,7 +91,8 @@ const getTicket = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ticket = yield prisma_1.prisma.ticket.findFirst({
             where: {
-                userId: id
+                userId: id,
+                isDelete: false
             },
             include: {
                 user: {},
