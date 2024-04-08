@@ -62,16 +62,16 @@ const registerNewVehicle = (body) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.registerNewVehicle = registerNewVehicle;
-const getVehicleByUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+const getVehicleByUser = (userId, licensePlate) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const vehicle = yield prisma_1.prisma.vehicle.findMany({
-            where: {
-                users: {
+            where: Object.assign(Object.assign({}, (licensePlate && {
+                licensePlate: licensePlate
+            })), { users: {
                     every: {
                         id: Number(userId)
                     }
-                }
-            }
+                } })
         });
         return vehicle[0];
     }

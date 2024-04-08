@@ -27,7 +27,8 @@ const registerNewVehicle = async (body: Vehicle) => {
 
     console.log('licensePlate => ', body.licensePlate)
 
-    if (await getVehicleByUser(body?.user_id)) throw new Error('CAR_ALREADY_REGISTER_BY_THIS_USER')
+    if (await getVehicleByUser(body?.user_id, body?.licensePlate))
+      throw new Error('CAR_ALREADY_REGISTER_BY_THIS_USER')
 
     const newVehicle = await prisma.vehicle.create({
       data: {
