@@ -52,7 +52,7 @@ const generateNewTicket = async (body: Ticket) => {
 
     console.log('vehicle', vehicle)
 
-    // if (vehicle) throw new Error('Vehicle is already registered')
+    if (vehicle) throw new Error('Vehicle is already assign to a ticket')
 
     //TODO: Check user already has a ticket
     const newTicket = await prisma.ticket.create({
