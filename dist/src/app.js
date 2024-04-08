@@ -27,7 +27,7 @@ app.use(body_parser_1.default.json());
     try {
         yield (0, prisma_service_1.connectToDatabase)();
         app.use('/api', router_1.default);
-        app.get('/health', (req, res) => {
+        app.get('/health', (_req, res) => {
             res.status(200).json('is Healthy');
         });
         const PORT = process.env.PORT || 3002;

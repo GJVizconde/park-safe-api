@@ -40,7 +40,6 @@ const registerParkingPlace = (body) => __awaiter(void 0, void 0, void 0, functio
                 id: body.id
             }
         });
-        console.log('Generado nuevo ParkingPlace', newParkingPlace);
         return newParkingPlace;
     }
     catch (error) {

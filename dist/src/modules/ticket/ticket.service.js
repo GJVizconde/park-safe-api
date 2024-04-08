@@ -15,7 +15,6 @@ const errorResponse_1 = require("../../utils/errorResponse");
 const vehicle_service_1 = require("../vehicle/vehicle.service");
 const getAllTickets = (active) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('ACTIVE => ', active);
         const tickets = yield prisma_1.prisma.ticket.findMany({
             where: Object.assign({}, (active === true && {
                 isDelete: false
@@ -54,7 +53,6 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
         if (user)
             throw new Error('User already has a ticket');
         const vehicle = yield (0, vehicle_service_1.getAllVehicles)(body.vehicleId);
-        console.log(vehicle);
         const isExistVehicle = yield prisma_1.prisma.ticket.findFirst({
             where: {
                 vehicle: {
@@ -63,7 +61,6 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
                 isDelete: false
             }
         });
-        console.log('isExistVehicle', isExistVehicle);
         if (isExistVehicle)
             throw new Error('Vehicle is already assign to a ticket');
         const newTicket = yield prisma_1.prisma.ticket.create({

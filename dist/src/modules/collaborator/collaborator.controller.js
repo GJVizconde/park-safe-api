@@ -14,7 +14,6 @@ const errorResponse_1 = require("../../utils/errorResponse");
 const collaborator_service_1 = require("./collaborator.service");
 const getCollaborators = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('Estoy en getUsersController');
         const collaborators = yield (0, collaborator_service_1.getAllCollaborators)();
         res.status(200).send(collaborators);
     }
@@ -25,7 +24,6 @@ const getCollaborators = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.getCollaborators = getCollaborators;
 const registerCollaborator = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ body }, res) {
     try {
-        console.log('Body en controller', body);
         const registerUser = yield (0, collaborator_service_1.newCollaborator)(body);
         res.status(200).send(registerUser);
     }

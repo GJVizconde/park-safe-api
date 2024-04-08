@@ -14,8 +14,6 @@ const errorResponse_1 = require("../../utils/errorResponse");
 const vehicle_service_1 = require("./vehicle.service");
 const getVehicles = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query: { id } }, res) {
     try {
-        console.log(id);
-        console.log('Estoy en getVehiclesController');
         const vehicles = yield (0, vehicle_service_1.getAllVehicles)(String(id));
         res.status(200).send(vehicles);
     }
@@ -37,7 +35,6 @@ exports.registerVehicle = registerVehicle;
 const getVehicleByUserId = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0, function* ({ params }, res) {
     try {
         const { userId } = params;
-        console.log('Estoy en getVehicleByUserId 2432423');
         const vehicle = yield (0, vehicle_service_1.getVehicleByUser)(Number(userId));
         res.status(200).send(vehicle);
     }
@@ -48,9 +45,7 @@ const getVehicleByUserId = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0,
 exports.getVehicleByUserId = getVehicleByUserId;
 const getVehicleByLicensePlate = (_d, res_4) => __awaiter(void 0, [_d, res_4], void 0, function* ({ params }, res) {
     try {
-        console.log('Estoy en servicio000000000000000');
         const { licenseId } = params;
-        console.log('Estoy en getVehicleByLicensePlate');
         const vehicle = yield (0, vehicle_service_1.getVehicleByLicense)(licenseId);
         res.status(200).send(vehicle);
     }

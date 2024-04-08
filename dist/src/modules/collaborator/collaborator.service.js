@@ -41,7 +41,6 @@ const newCollaborator = (body) => __awaiter(void 0, void 0, void 0, function* ()
         const newCollaborator = yield prisma_1.prisma.collaborator.create({
             data: Object.assign(Object.assign({}, body), { id: Number(body.id) })
         });
-        console.log(newCollaborator);
         return newCollaborator;
     }
     catch (error) {

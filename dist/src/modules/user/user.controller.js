@@ -15,7 +15,6 @@ const user_service_1 = require("./user.service");
 const getUsers = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query }, res) {
     const { userId, ticket } = query;
     try {
-        console.log('Estoy en getUsersController');
         const users = yield (0, user_service_1.getAllUsers)(Number(userId), Boolean(ticket));
         res.status(200).send(users);
     }

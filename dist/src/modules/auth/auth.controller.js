@@ -14,7 +14,6 @@ const errorResponse_1 = require("../../utils/errorResponse");
 const auth_service_1 = require("./auth.service");
 const register = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ body }, res) {
     try {
-        console.log('Body en controller', body);
         const registerUser = yield (0, auth_service_1.newUser)(body);
         res.status(200).send(registerUser);
     }
@@ -25,7 +24,6 @@ const register = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function*
 exports.register = register;
 const login = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body }, res) {
     try {
-        console.log('Body en controller', body);
         const user = yield (0, auth_service_1.loginUser)(body);
         res.status(200).send(user);
     }

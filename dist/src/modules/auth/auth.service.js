@@ -15,8 +15,6 @@ const jwt_handle_1 = require("../../utils/jwt.handle");
 const prisma_1 = require("../prisma");
 const newUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('BODY QUE LLEGA', body);
-        console.log(body.id);
         const user = yield prisma_1.prisma.user.findFirst({
             where: {
                 id: Number(body.id)
@@ -40,7 +38,6 @@ const newUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
                 id: Number(body.id)
             }
         });
-        console.log(newUser);
         return newUser;
     }
     catch (error) {
@@ -74,7 +71,6 @@ const loginUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id, passw
         const passwordHash = checkIs.password;
         if (password !== passwordHash)
             throw new Error('Credentials are invalid');
-        console.log('USUARIO  =>', checkIs);
         const token = (0, jwt_handle_1.generateToken)(checkIs.email, checkIs.role, checkIs.id);
         const data = {
             token,
