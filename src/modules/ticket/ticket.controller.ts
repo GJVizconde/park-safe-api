@@ -10,7 +10,6 @@ import {
 
 const getTickets = async ({ query: { active } }: Request, res: Response) => {
   try {
-    console.log('active controller', active)
     const tickets = await getAllTickets(Boolean(active))
     res.status(200).send(tickets)
   } catch (error) {
@@ -20,7 +19,6 @@ const getTickets = async ({ query: { active } }: Request, res: Response) => {
 
 const generateTicket = async ({ body }: Request, res: Response) => {
   try {
-    console.log(body)
     const ticket = await generateNewTicket(body)
 
     res.status(200).send(ticket)
@@ -34,7 +32,6 @@ const getTicketByUserId = async (req: Request, res: Response) => {
 
   try {
     const ticket = await getTicket(Number(id))
-    console.log('Saliendo', ticket)
     res.status(200).send(ticket)
   } catch (error) {
     handleErrorResponse(res, error)

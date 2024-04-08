@@ -15,7 +15,7 @@ app.use(bodyParser.json())
   try {
     await connectToDatabase()
     app.use('/api', router)
-    app.get('/health', (req: Request, res: Response) => {
+    app.get('/health', (_req: Request, res: Response) => {
       res.status(200).json('is Healthy')
     })
     const PORT = process.env.PORT || 3002

@@ -33,8 +33,6 @@ const registerParkingPlace = async (body: User) => {
       }
     })
 
-    console.log('Generado nuevo ParkingPlace', newParkingPlace)
-
     return newParkingPlace
   } catch (error) {
     handleError(error, 'ERROR_REGISTER_NEW_PARKING_PLACE')

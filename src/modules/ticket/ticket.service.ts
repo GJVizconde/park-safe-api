@@ -6,7 +6,6 @@ import { Vehicle } from '../vehicle/vehicle.interface'
 
 const getAllTickets = async (active: boolean | undefined) => {
   try {
-    console.log('ACTIVE => ', active)
     const tickets = await prisma.ticket.findMany({
       where: {
         ...(active === true && {
@@ -47,8 +46,6 @@ const generateNewTicket = async (body: Ticket) => {
 
     const vehicle = await getAllVehicles(body.vehicleId)
 
-    console.log(vehicle)
-
     const isExistVehicle = await prisma.ticket.findFirst({
       where: {
         vehicle: {
@@ -57,8 +54,6 @@ const generateNewTicket = async (body: Ticket) => {
         isDelete: false
       }
     })
-
-    console.log('isExistVehicle', isExistVehicle)
 
     if (isExistVehicle) throw new Error('Vehicle is already assign to a ticket')
 

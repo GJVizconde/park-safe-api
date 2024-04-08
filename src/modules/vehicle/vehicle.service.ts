@@ -25,13 +25,7 @@ const registerNewVehicle = async (body: Vehicle) => {
       }
     })
 
-    console.log('USER => ', user)
-
     if (!user) throw new Error('USER NOT FOUND, REGISTER NEW USER')
-
-    console.log('Nuevo Registro')
-
-    console.log('licensePlate => ', body.licensePlate)
 
     if (await getVehicleByUser(body?.user_id, body?.licensePlate))
       throw new Error('CAR_ALREADY_REGISTER_BY_THIS_USER')

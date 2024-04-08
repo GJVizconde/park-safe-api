@@ -36,8 +36,6 @@ const newCollaborator = async (body: User) => {
       }
     })
 
-    console.log(newCollaborator)
-
     return newCollaborator
   } catch (error) {
     handleError(error, 'ERROR_REGISTER_NEW_USER')

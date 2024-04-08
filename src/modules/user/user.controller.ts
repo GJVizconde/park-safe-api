@@ -6,7 +6,6 @@ const getUsers = async ({ query }: Request, res: Response) => {
   const { userId, ticket } = query
 
   try {
-    console.log('Estoy en getUsersController')
     const users = await getAllUsers(Number(userId), Boolean(ticket))
     res.status(200).send(users)
   } catch (error) {

@@ -6,8 +6,6 @@ import { Auth } from './auth.interface'
 
 const newUser = async (body: User) => {
   try {
-    console.log('BODY QUE LLEGA', body)
-    console.log(body.id)
     const user = await prisma.user.findFirst({
       where: {
         id: Number(body.id)
@@ -33,8 +31,6 @@ const newUser = async (body: User) => {
         id: Number(body.id)
       }
     })
-
-    console.log(newUser)
 
     return newUser
   } catch (error) {
@@ -68,8 +64,6 @@ const loginUser = async ({ id, password }: Auth) => {
     const passwordHash = checkIs.password
 
     if (password !== passwordHash) throw new Error('Credentials are invalid')
-
-    console.log('USUARIO  =>', checkIs)
 
     const token = generateToken(checkIs.email, checkIs.role, checkIs.id)
     const data = {

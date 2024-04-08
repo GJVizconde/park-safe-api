@@ -9,8 +9,6 @@ import {
 
 const getVehicles = async ({ query: { id } }: Request, res: Response) => {
   try {
-    console.log(id)
-    console.log('Estoy en getVehiclesController')
     const vehicles = await getAllVehicles(String(id))
     res.status(200).send(vehicles)
   } catch (error) {
@@ -31,7 +29,6 @@ const registerVehicle = async ({ body }: Request, res: Response) => {
 const getVehicleByUserId = async ({ params }: Request, res: Response) => {
   try {
     const { userId } = params
-    console.log('Estoy en getVehicleByUserId 2432423')
     const vehicle = await getVehicleByUser(Number(userId))
     res.status(200).send(vehicle)
   } catch (error) {
@@ -41,9 +38,7 @@ const getVehicleByUserId = async ({ params }: Request, res: Response) => {
 
 const getVehicleByLicensePlate = async ({ params }: Request, res: Response) => {
   try {
-    console.log('Estoy en servicio000000000000000')
     const { licenseId } = params
-    console.log('Estoy en getVehicleByLicensePlate')
     const vehicle = await getVehicleByLicense(licenseId)
     res.status(200).send(vehicle)
   } catch (error) {

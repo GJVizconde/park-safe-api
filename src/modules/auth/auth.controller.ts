@@ -4,7 +4,6 @@ import { loginUser, newUser } from './auth.service'
 
 const register = async ({ body }: Request, res: Response) => {
   try {
-    console.log('Body en controller', body)
     const registerUser = await newUser(body)
     res.status(200).send(registerUser)
   } catch (error) {
@@ -14,7 +13,6 @@ const register = async ({ body }: Request, res: Response) => {
 
 const login = async ({ body }: Request, res: Response) => {
   try {
-    console.log('Body en controller', body)
     const user = await loginUser(body)
     res.status(200).send(user)
   } catch (error) {
