@@ -34,8 +34,8 @@ const registerNewVehicle = (body) => __awaiter(void 0, void 0, void 0, function*
             throw new Error('USER NOT FOUND, REGISTER NEW USER');
         console.log('Nuevo Registro');
         console.log('licensePlate => ', body.licensePlate);
-        if (yield getVehicleByLicense(body === null || body === void 0 ? void 0 : body.licensePlate))
-            throw new Error('CAR_ALREADY_REGISTER');
+        if (yield getVehicleByUser(body === null || body === void 0 ? void 0 : body.user_id))
+            throw new Error('CAR_ALREADY_REGISTER_BY_THIS_USER');
         const newVehicle = yield prisma_1.prisma.vehicle.create({
             data: {
                 licensePlate: body.licensePlate, // Asegúrate de que este sea un ID único
