@@ -12,9 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getVehicleByLicense = exports.getVehicleByUser = exports.registerNewVehicle = exports.getAllVehicles = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
-const getAllVehicles = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllVehicles = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const vehicles = yield prisma_1.prisma.vehicle.findMany({});
+        const vehicles = yield prisma_1.prisma.vehicle.findMany({
+            where: Object.assign({}, (id && {
+                id
+            }))
+        });
         return vehicles;
     }
     catch (error) {

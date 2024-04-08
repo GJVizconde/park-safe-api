@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTicketById = exports.softDeleteTicketStatus = exports.getTicket = exports.generateNewTicket = exports.getAllTickets = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
+const vehicle_service_1 = require("../vehicle/vehicle.service");
 const getAllTickets = (active) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log('ACTIVE => ', active);
@@ -42,6 +43,7 @@ const getAllTickets = (active) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getAllTickets = getAllTickets;
 const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const user = yield prisma_1.prisma.ticket.findFirst({
             where: {
@@ -50,17 +52,20 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
             }
         });
         if (user)
-            throw new Error('User already registered a vehicle');
-        const vehicle = yield prisma_1.prisma.ticket.findFirst({
+            throw new Error('User already has a ticket');
+        const vehicle = yield (0, vehicle_service_1.getAllVehicles)(body.vehicleId);
+        console.log(vehicle);
+        const isExistVehicle = yield prisma_1.prisma.ticket.findFirst({
             where: {
-                vehicleId: body.vehicleId,
+                vehicle: {
+                    licensePlate: vehicle ? (_a = vehicle[0]) === null || _a === void 0 ? void 0 : _a.licensePlate : ''
+                },
                 isDelete: false
             }
         });
-        console.log('vehicle', vehicle);
-        if (vehicle)
+        console.log('isExistVehicle', isExistVehicle);
+        if (isExistVehicle)
             throw new Error('Vehicle is already assign to a ticket');
-        //TODO: Check user already has a ticket
         const newTicket = yield prisma_1.prisma.ticket.create({
             data: {
                 userId: body.userId,

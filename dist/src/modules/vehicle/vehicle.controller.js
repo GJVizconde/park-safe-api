@@ -12,10 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getVehicleByLicensePlate = exports.getVehicleByUserId = exports.registerVehicle = exports.getVehicles = void 0;
 const errorResponse_1 = require("../../utils/errorResponse");
 const vehicle_service_1 = require("./vehicle.service");
-const getVehicles = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getVehicles = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query: { id } }, res) {
     try {
+        console.log(id);
         console.log('Estoy en getVehiclesController');
-        const vehicles = yield (0, vehicle_service_1.getAllVehicles)();
+        const vehicles = yield (0, vehicle_service_1.getAllVehicles)(String(id));
         res.status(200).send(vehicles);
     }
     catch (error) {
@@ -23,7 +24,7 @@ const getVehicles = (_req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getVehicles = getVehicles;
-const registerVehicle = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ body }, res) {
+const registerVehicle = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body }, res) {
     try {
         const vehicle = yield (0, vehicle_service_1.registerNewVehicle)(body);
         res.status(200).send(vehicle);
@@ -33,7 +34,7 @@ const registerVehicle = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, fu
     }
 });
 exports.registerVehicle = registerVehicle;
-const getVehicleByUserId = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ params }, res) {
+const getVehicleByUserId = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0, function* ({ params }, res) {
     try {
         const { userId } = params;
         console.log('Estoy en getVehicleByUserId 2432423');
@@ -45,7 +46,7 @@ const getVehicleByUserId = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0,
     }
 });
 exports.getVehicleByUserId = getVehicleByUserId;
-const getVehicleByLicensePlate = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0, function* ({ params }, res) {
+const getVehicleByLicensePlate = (_d, res_4) => __awaiter(void 0, [_d, res_4], void 0, function* ({ params }, res) {
     try {
         console.log('Estoy en servicio000000000000000');
         const { licenseId } = params;
