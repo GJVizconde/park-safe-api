@@ -54,10 +54,13 @@ const registerNewVehicle = async (body: Vehicle) => {
   }
 }
 
-const getVehicleByUser = async (userId: number) => {
+const getVehicleByUser = async (userId: number, licensePlate?: string) => {
   try {
     const vehicle = await prisma.vehicle.findMany({
       where: {
+        ...(licensePlate && {
+          licensePlate: licensePlate
+        }),
         users: {
           every: {
             id: Number(userId)
