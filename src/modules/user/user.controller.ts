@@ -3,10 +3,10 @@ import { handleErrorResponse } from '../../utils/errorResponse'
 import { getAllUsers } from './user.service'
 
 const getUsers = async ({ query }: Request, res: Response) => {
-  const { userId, ticket } = query
+  const { userId, ticket, hasVehicle } = query
 
   try {
-    const users = await getAllUsers(Number(userId), Boolean(ticket))
+    const users = await getAllUsers(Number(userId), String(ticket), String(hasVehicle))
     res.status(200).send(users)
   } catch (error) {
     handleErrorResponse(res, error)

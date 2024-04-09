@@ -1,23 +1,35 @@
 import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 
-const getAllUsers = async (userId: number | null, ticket: boolean | undefined) => {
+const getAllUsers = async (userId?: number, ticket?: string, hasVehicle?: string) => {
   try {
     const users = await prisma.user.findMany({
       where: {
         id: userId ? userId : undefined,
 
-        ...(ticket === true && {
+        ...(ticket === 'true' && {
           tickets: {
             some: {
               isDelete: false
             }
           }
         }),
+        ...(ticket === 'false' && {
+          tickets: {
+            none: {
+              isDelete: false
+            }
+          }
+        }),
+        ...(hasVehicle === 'true' && {
+          vehicles: {
+            some: {}
+          }
+        }),
         role: 'USER'
       },
       include: {
-        ...(ticket !== true && {
+        ...(ticket !== 'true' && {
           // No incluir vehicles si ticket es verdadero
           vehicles: {}
         }),
@@ -31,6 +43,7 @@ const getAllUsers = async (userId: number | null, ticket: boolean | undefined) =
         }
       }
     })
+
     return users
   } catch (error) {
     handleError(error, 'ERROR_GET_USERS')

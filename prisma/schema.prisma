@@ -54,7 +54,7 @@ model Collaborator {
 
 model Ticket {
   id       String    @id @unique @default(uuid())
-  checkIn  DateTime  @default(now())
+  checkIn  DateTime  @default(now()) @db.Timestamptz(3)
   checkOut DateTime?
   isDelete Boolean   @default(false)
 
