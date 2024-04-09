@@ -2,14 +2,18 @@ import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 import { Ticket } from './ticket.interface'
 import { getAllVehicles } from '../vehicle/vehicle.service'
-import { Vehicle } from '../vehicle/vehicle.interface'
 
-const getAllTickets = async (active: boolean | undefined) => {
+const getAllTickets = async (active?: boolean, userId?: number) => {
   try {
     const tickets = await prisma.ticket.findMany({
       where: {
         ...(active === true && {
           isDelete: false
+        }),
+        ...(userId && {
+          user: {
+            id: userId
+          }
         })
       },
       include: {

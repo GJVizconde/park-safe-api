@@ -35,7 +35,7 @@ CREATE TABLE "Collaborator" (
 -- CreateTable
 CREATE TABLE "Ticket" (
     "id" TEXT NOT NULL,
-    "checkIn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "checkIn" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "checkOut" TIMESTAMP(3),
     "isDelete" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,

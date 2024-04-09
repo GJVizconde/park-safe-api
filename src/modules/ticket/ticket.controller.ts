@@ -8,9 +8,10 @@ import {
   softDeleteTicketStatus
 } from './ticket.service'
 
-const getTickets = async ({ query: { active } }: Request, res: Response) => {
+const getTickets = async ({ query: { active, userId } }: Request, res: Response) => {
   try {
-    const tickets = await getAllTickets(Boolean(active))
+    console.log('userId =>', userId)
+    const tickets = await getAllTickets(Boolean(active), Number(userId))
     res.status(200).send(tickets)
   } catch (error) {
     handleErrorResponse(res, error)
