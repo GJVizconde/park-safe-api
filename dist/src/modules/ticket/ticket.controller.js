@@ -12,9 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTicket = exports.softDeleteTicket = exports.getTicketByUserId = exports.generateTicket = exports.getTickets = void 0;
 const errorResponse_1 = require("../../utils/errorResponse");
 const ticket_service_1 = require("./ticket.service");
-const getTickets = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query: { active } }, res) {
+const getTickets = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query: { active, userId } }, res) {
     try {
-        const tickets = yield (0, ticket_service_1.getAllTickets)(Boolean(active));
+        console.log('userId =>', userId);
+        const tickets = yield (0, ticket_service_1.getAllTickets)(Boolean(active), Number(userId));
         res.status(200).send(tickets);
     }
     catch (error) {

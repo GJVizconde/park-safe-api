@@ -13,11 +13,15 @@ exports.deleteTicketById = exports.softDeleteTicketStatus = exports.getTicket = 
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
 const vehicle_service_1 = require("../vehicle/vehicle.service");
-const getAllTickets = (active) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllTickets = (active, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tickets = yield prisma_1.prisma.ticket.findMany({
-            where: Object.assign({}, (active === true && {
+            where: Object.assign(Object.assign({}, (active === true && {
                 isDelete: false
+            })), (userId && {
+                user: {
+                    id: userId
+                }
             })),
             include: {
                 user: {
