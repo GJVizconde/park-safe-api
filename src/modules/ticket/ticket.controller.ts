@@ -18,9 +18,10 @@ const getTickets = async ({ query: { active, userId } }: Request, res: Response)
   }
 }
 
-const generateTicket = async ({ body }: Request, res: Response) => {
+const generateTicket = async ({ body, headers }: Request, res: Response) => {
   try {
-    const ticket = await generateNewTicket(body)
+    const timeZoneOffset = headers['x-timezone-offset']
+    const ticket = await generateNewTicket(body, String(timeZoneOffset))
 
     res.status(200).send(ticket)
   } catch (error) {

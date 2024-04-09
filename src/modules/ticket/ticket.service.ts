@@ -2,6 +2,7 @@ import { prisma } from '../prisma'
 import { handleError } from '../../utils/errorResponse'
 import { Ticket } from './ticket.interface'
 import { getAllVehicles } from '../vehicle/vehicle.service'
+import { localTime } from '../../utils/DateTime'
 
 const getAllTickets = async (active?: boolean, userId?: number) => {
   try {
@@ -37,7 +38,11 @@ const getAllTickets = async (active?: boolean, userId?: number) => {
   }
 }
 
-const generateNewTicket = async (body: Ticket) => {
+const generateNewTicket = async (body: Ticket, timeZoneOffset?: string) => {
+  const localDateTime = localTime(timeZoneOffset)
+
+  console.log('locaDateTime2', localDateTime)
+
   try {
     const user = await prisma.ticket.findFirst({
       where: {
@@ -66,6 +71,7 @@ const generateNewTicket = async (body: Ticket) => {
         userId: body.userId,
         vehicleId: body.vehicleId,
         parkingId: body.parkingId,
+        checkIn: localDateTime,
         collaborators: {
           connect: {
             id: Number(body.collaboratorId) // ID del usuario que deseas conectar al vehículo
@@ -83,7 +89,10 @@ const generateNewTicket = async (body: Ticket) => {
       }
     })
 
-    return { newTicket, statusParking }
+    return {
+      newTicket,
+      statusParking
+    }
   } catch (error) {
     handleError(error, 'ERROR_REGISTER_TICKET')
   }
