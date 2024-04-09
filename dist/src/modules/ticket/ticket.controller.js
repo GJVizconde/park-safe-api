@@ -23,9 +23,10 @@ const getTickets = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, functio
     }
 });
 exports.getTickets = getTickets;
-const generateTicket = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body }, res) {
+const generateTicket = (_b, res_2) => __awaiter(void 0, [_b, res_2], void 0, function* ({ body, headers }, res) {
     try {
-        const ticket = yield (0, ticket_service_1.generateNewTicket)(body);
+        const timeZoneOffset = headers['x-timezone-offset'];
+        const ticket = yield (0, ticket_service_1.generateNewTicket)(body, String(timeZoneOffset));
         res.status(200).send(ticket);
     }
     catch (error) {

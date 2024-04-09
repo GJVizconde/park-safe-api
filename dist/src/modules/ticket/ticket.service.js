@@ -13,6 +13,7 @@ exports.deleteTicketById = exports.softDeleteTicketStatus = exports.getTicket = 
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
 const vehicle_service_1 = require("../vehicle/vehicle.service");
+const DateTime_1 = require("../../utils/DateTime");
 const getAllTickets = (active, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tickets = yield prisma_1.prisma.ticket.findMany({
@@ -45,8 +46,10 @@ const getAllTickets = (active, userId) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.getAllTickets = getAllTickets;
-const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* () {
+const generateNewTicket = (body, timeZoneOffset) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
+    const localDateTime = (0, DateTime_1.localTime)(timeZoneOffset);
+    console.log('locaDateTime2', localDateTime);
     try {
         const user = yield prisma_1.prisma.ticket.findFirst({
             where: {
@@ -72,6 +75,7 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
                 userId: body.userId,
                 vehicleId: body.vehicleId,
                 parkingId: body.parkingId,
+                checkIn: localDateTime,
                 collaborators: {
                     connect: {
                         id: Number(body.collaboratorId) // ID del usuario que deseas conectar al vehículo
@@ -87,7 +91,10 @@ const generateNewTicket = (body) => __awaiter(void 0, void 0, void 0, function* 
                 available: false
             }
         });
-        return { newTicket, statusParking };
+        return {
+            newTicket,
+            statusParking
+        };
     }
     catch (error) {
         (0, errorResponse_1.handleError)(error, 'ERROR_REGISTER_TICKET');
