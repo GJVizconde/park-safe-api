@@ -12,17 +12,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllUsers = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
-const getAllUsers = (userId, ticket) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUsers = (userId, ticket, hasVehicle) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield prisma_1.prisma.user.findMany({
-            where: Object.assign(Object.assign({ id: userId ? userId : undefined }, (ticket === true && {
+            where: Object.assign(Object.assign(Object.assign(Object.assign({ id: userId ? userId : undefined }, (ticket === 'true' && {
                 tickets: {
                     some: {
                         isDelete: false
                     }
                 }
+            })), (ticket === 'false' && {
+                tickets: {
+                    none: {
+                        isDelete: false
+                    }
+                }
+            })), (hasVehicle === 'true' && {
+                vehicles: {
+                    some: {}
+                }
             })), { role: 'USER' }),
-            include: Object.assign(Object.assign({}, (ticket !== true && {
+            include: Object.assign(Object.assign({}, (ticket !== 'true' && {
                 // No incluir vehicles si ticket es verdadero
                 vehicles: {}
             })), { tickets: {

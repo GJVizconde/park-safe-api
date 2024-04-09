@@ -13,9 +13,9 @@ exports.getUsers = void 0;
 const errorResponse_1 = require("../../utils/errorResponse");
 const user_service_1 = require("./user.service");
 const getUsers = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query }, res) {
-    const { userId, ticket } = query;
+    const { userId, ticket, hasVehicle } = query;
     try {
-        const users = yield (0, user_service_1.getAllUsers)(Number(userId), Boolean(ticket));
+        const users = yield (0, user_service_1.getAllUsers)(Number(userId), String(ticket), String(hasVehicle));
         res.status(200).send(users);
     }
     catch (error) {
