@@ -14,7 +14,6 @@ const errorResponse_1 = require("../../utils/errorResponse");
 const ticket_service_1 = require("./ticket.service");
 const getTickets = (_a, res_1) => __awaiter(void 0, [_a, res_1], void 0, function* ({ query: { active, userId } }, res) {
     try {
-        console.log('userId =>', userId);
         const tickets = yield (0, ticket_service_1.getAllTickets)(Boolean(active), Number(userId));
         res.status(200).send(tickets);
     }
@@ -45,9 +44,10 @@ const getTicketByUserId = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getTicketByUserId = getTicketByUserId;
-const softDeleteTicket = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0, function* ({ params: { id } }, res) {
+const softDeleteTicket = (_c, res_3) => __awaiter(void 0, [_c, res_3], void 0, function* ({ params: { id }, headers }, res) {
     try {
-        const ticketStatus = yield (0, ticket_service_1.softDeleteTicketStatus)(id);
+        const timeZoneOffset = headers['x-timezone-offset'];
+        const ticketStatus = yield (0, ticket_service_1.softDeleteTicketStatus)(id, String(timeZoneOffset));
         res.status(200).send(ticketStatus);
     }
     catch (error) {

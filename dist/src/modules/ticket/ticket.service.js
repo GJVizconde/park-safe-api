@@ -8,15 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTicketById = exports.softDeleteTicketStatus = exports.getTicket = exports.generateNewTicket = exports.getAllTickets = void 0;
 const prisma_1 = require("../prisma");
 const errorResponse_1 = require("../../utils/errorResponse");
 const vehicle_service_1 = require("../vehicle/vehicle.service");
 const DateTime_1 = require("../../utils/DateTime");
+const moment_1 = __importDefault(require("moment"));
+moment_1.default.locale('es');
 const getAllTickets = (active, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tickets = yield prisma_1.prisma.ticket.findMany({
+        let tickets = yield prisma_1.prisma.ticket.findMany({
             where: Object.assign(Object.assign({}, (active === true && {
                 isDelete: false
             })), (userId && {
@@ -39,6 +44,9 @@ const getAllTickets = (active, userId) => __awaiter(void 0, void 0, void 0, func
                 vehicle: {}
             }
         });
+        tickets = tickets.map((ticket) => {
+            return Object.assign(Object.assign({}, ticket), { checkInFormatted: (0, moment_1.default)(ticket.checkIn).format('LLLL') });
+        });
         return tickets;
     }
     catch (error) {
@@ -49,7 +57,6 @@ exports.getAllTickets = getAllTickets;
 const generateNewTicket = (body, timeZoneOffset) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const localDateTime = (0, DateTime_1.localTime)(timeZoneOffset);
-    console.log('locaDateTime2', localDateTime);
     try {
         const user = yield prisma_1.prisma.ticket.findFirst({
             where: {
@@ -121,14 +128,16 @@ const getTicket = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getTicket = getTicket;
-const softDeleteTicketStatus = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const softDeleteTicketStatus = (id, timeZoneOffset) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ticket = yield prisma_1.prisma.ticket.update({
+        const localDateTime = (0, DateTime_1.localTime)(timeZoneOffset);
+        let ticket = yield prisma_1.prisma.ticket.update({
             where: {
                 id: id
             },
             data: {
                 isDelete: true,
+                checkOut: localDateTime,
                 parking: {
                     update: {
                         available: true
@@ -136,6 +145,7 @@ const softDeleteTicketStatus = (id) => __awaiter(void 0, void 0, void 0, functio
                 }
             }
         });
+        ticket = Object.assign(Object.assign({}, ticket), { checkOutFormatted: (0, moment_1.default)(ticket.checkIn).format('LLLL') });
         return ticket;
     }
     catch (error) {
