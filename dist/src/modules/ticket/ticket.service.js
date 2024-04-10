@@ -145,7 +145,7 @@ const softDeleteTicketStatus = (id, timeZoneOffset) => __awaiter(void 0, void 0,
                 }
             }
         });
-        ticket = Object.assign(Object.assign({}, ticket), { checkOutFormatted: (0, moment_1.default)(ticket.checkIn).format('LLLL') });
+        ticket = Object.assign(Object.assign({}, ticket), { checkOutFormatted: (0, moment_1.default)(ticket.checkOut).format('LLLL') });
         return ticket;
     }
     catch (error) {
