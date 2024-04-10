@@ -147,7 +147,7 @@ const softDeleteTicketStatus = async (id: string, timeZoneOffset?: string) => {
 
     ticket = {
       ...ticket,
-      checkOutFormatted: moment(ticket.checkIn).format('LLLL')
+      checkOutFormatted: moment(ticket.checkOut).format('LLLL')
     }
 
     return ticket
