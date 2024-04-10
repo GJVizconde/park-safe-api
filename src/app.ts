@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import router from './routes/router'
 import { connectToDatabase } from './modules/prisma/prisma.service'
+import moment from 'moment'
 
 const app = express()
 

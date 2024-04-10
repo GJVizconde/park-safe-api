@@ -10,7 +10,6 @@ import {
 
 const getTickets = async ({ query: { active, userId } }: Request, res: Response) => {
   try {
-    console.log('userId =>', userId)
     const tickets = await getAllTickets(Boolean(active), Number(userId))
     res.status(200).send(tickets)
   } catch (error) {
@@ -40,9 +39,10 @@ const getTicketByUserId = async (req: Request, res: Response) => {
   }
 }
 
-const softDeleteTicket = async ({ params: { id } }: Request, res: Response) => {
+const softDeleteTicket = async ({ params: { id }, headers }: Request, res: Response) => {
   try {
-    const ticketStatus = await softDeleteTicketStatus(id)
+    const timeZoneOffset = headers['x-timezone-offset']
+    const ticketStatus = await softDeleteTicketStatus(id, String(timeZoneOffset))
     res.status(200).send(ticketStatus)
   } catch (error) {
     handleErrorResponse(res, error)

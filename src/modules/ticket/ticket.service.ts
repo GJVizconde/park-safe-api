@@ -3,10 +3,13 @@ import { handleError } from '../../utils/errorResponse'
 import { Ticket } from './ticket.interface'
 import { getAllVehicles } from '../vehicle/vehicle.service'
 import { localTime } from '../../utils/DateTime'
+import moment from 'moment'
+
+moment.locale('es')
 
 const getAllTickets = async (active?: boolean, userId?: number) => {
   try {
-    const tickets = await prisma.ticket.findMany({
+    let tickets = await prisma.ticket.findMany({
       where: {
         ...(active === true && {
           isDelete: false
@@ -32,6 +35,14 @@ const getAllTickets = async (active?: boolean, userId?: number) => {
         vehicle: {}
       }
     })
+
+    tickets = tickets.map((ticket) => {
+      return {
+        ...ticket,
+        checkInFormatted: moment(ticket.checkIn).format('LLLL')
+      }
+    })
+
     return tickets
   } catch (error) {
     handleError(error, 'ERROR_GET_TICKETS')
@@ -40,8 +51,6 @@ const getAllTickets = async (active?: boolean, userId?: number) => {
 
 const generateNewTicket = async (body: Ticket, timeZoneOffset?: string) => {
   const localDateTime = localTime(timeZoneOffset)
-
-  console.log('locaDateTime2', localDateTime)
 
   try {
     const user = await prisma.ticket.findFirst({
@@ -117,14 +126,17 @@ const getTicket = async (id: number) => {
   }
 }
 
-const softDeleteTicketStatus = async (id: string) => {
+const softDeleteTicketStatus = async (id: string, timeZoneOffset?: string) => {
   try {
-    const ticket = await prisma.ticket.update({
+    const localDateTime = localTime(timeZoneOffset)
+
+    let ticket: Ticket = await prisma.ticket.update({
       where: {
         id: id
       },
       data: {
         isDelete: true,
+        checkOut: localDateTime,
         parking: {
           update: {
             available: true
@@ -132,6 +144,11 @@ const softDeleteTicketStatus = async (id: string) => {
         }
       }
     })
+
+    ticket = {
+      ...ticket,
+      checkOutFormatted: moment(ticket.checkIn).format('LLLL')
+    }
 
     return ticket
   } catch (error) {
